@@ -1,0 +1,15 @@
+{
+      "cors" : {
+            "origins"   : [
+                  "http://localhost", 
+                  "https://localhost"
+            ]
+      },
+      "csrf" : {
+            "required" : false,
+            "ttl"      : 300
+      },
+      "http"       : { 
+            "port"      : 80
+      }
+}

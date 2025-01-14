@@ -1,0 +1,28 @@
+{
+      "global": {
+            "type"      : "mysql",
+            "host"      : "localhost",
+            "port"      : 3306,
+            "database"  : "global_db",
+            "username"  : "root",
+            "password"  : "password"
+      },
+      
+      "cache": {
+            "type"      : "mongo",
+            "host"      : "localhost",
+            "port"      : 27018,
+            "database"  : "_default",
+            "username"  : "",
+            "password"  : ""
+      },      
+
+      "internalStorage" : {
+            "type"      : "redis",
+            "host"      : "localhost",
+            "port"      : 6379,
+            "username"  : "",
+            "password"  : ""          
+      }
+
+}

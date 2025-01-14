@@ -1,0 +1,16 @@
+{
+      "defaultTwilio" : {
+            "service"         : "twilio",
+            "from"            : "",
+            "account"         : "",            
+            "privateKey"      : "",
+            "phone"           : ""
+      },
+      "defaultSNS" : { 
+            "service"         : "SNS",
+            "from"            : "",
+            "account"         : "",
+            "privateKey"      : "",
+            "region"          : "us-west-2"
+      }
+}

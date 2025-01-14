@@ -1,0 +1,20 @@
+{
+      "salt"                  : "[MEDIAHASH]",
+      "format"                : "{{ID}}_{{HASH}}_{{SIZE}}{{INIT}}.{{EXT}}",
+      "dirMedia"              : "media",
+      "dirMissing"            : "missing",
+      "dirOriginal"           : "original",
+      "missingI"              : "image_{{SIZE}}.webp",
+      "missingV"              : "video_{{SIZE}}.mp4",
+      "missingP"              : "preview_{{SIZE}}.gif",
+      "missingS"              : "screenshot_{{SIZE}}.webp",
+      "missingO"              : "original_{{SIZE}}.webp",
+      "missingC"              : "cover_{{SIZE}}.webp",
+      "cloud"                 : "google",
+      "bucket"                : "true-next-js-media",
+      "cdn"                   :  "https://storage.googleapis.com/true-next-js-media/",
+      "uploadLimitMB"         : 256,
+      "allowedImages"         : ["jpeg", "jpg", "png", "gif", "webp", "svg", "bmp", "wbmp"],
+      "allowedVideos"         : ["mp4", "webm", "ogg", "mov"],
+      "requireApproval"       : true
+}

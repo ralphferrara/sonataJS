@@ -1,0 +1,8 @@
+{
+        "twoFactor" : {
+                "attempts"   : 5,
+                "expires"    : 900,
+                "redisDB"    : "internalStorage",
+                "collection" : "cache"
+        }
+}

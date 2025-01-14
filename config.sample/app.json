@@ -1,0 +1,9 @@
+{
+      "name"        : "Sonata.js",
+      "version"     : "1.0.1",
+      "tempDir"     : "/.tmp",
+      "cluster"     : {
+            "use"       : true,
+            "instances" : 4
+      }
+}

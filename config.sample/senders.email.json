@@ -1,0 +1,22 @@
+{
+      "defaultSendgrid"  : {
+            "service"         : "sendgrid",
+            "from"            : "noreply@sonatats.com",
+            "token"           : ""
+      },
+      
+      "defaultSES" : {
+            "service"         : "SES",
+            "from"            : "noreply@sonatats.com",
+            "account"         : "",
+            "privateKey"      : "",
+            "region"          : "us-west-2" 
+      },
+
+      "defaultSIB" : {
+            "service"         : "sendinblue",
+            "from"            : "noreply@sonatats.com",
+            "account"         : "",
+            "privateKey"      : ""
+      }              
+}

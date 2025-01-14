@@ -1,0 +1,4 @@
+{
+      "secret"          : "[SECRETHASH]",
+      "defaultExpires"  : 600
+}

@@ -1,0 +1,9 @@
+{
+      "google" : {
+            "type"              : "google",
+            "project"           : "",
+            "username"          : "",
+            "private"           : "",
+            "credentials"       : "google.json"
+      }
+}
