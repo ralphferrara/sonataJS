@@ -70,7 +70,7 @@
             url         : string;
             ip          : string;
             headers     : { [key: string]: string };
-            cookies     : { [key: string]: string };
+            cookies     : { [key: string]: string | undefined }; // Allow undefined values
             params      : Record<string, string>;
             post        : Record<string, string>;
             files       : UploadFile[];
@@ -144,7 +144,7 @@
             created?     : Date;
             expires?     : Date;
             completed?   : boolean;
-            attempts?    : number;
+            attempts     : number;
       }   
 
       /*||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||

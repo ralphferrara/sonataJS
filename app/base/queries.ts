@@ -46,14 +46,18 @@
                         //|| FileWatcher Callback 
                         //||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||*/
                         this.watcher.callback = async (structure: FileWatcherObject[]) => {
-                                /*||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||
-                                //||  Use Promise.all to wait for all iterations to complete
-                                //||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||*/
-                                await Promise.all(structure.map(async (item) => {
-                                        if (!item.isFile) return;
-                                        const parsedPath = item.relative.replace(app("config", "queries").path, '').replace(/^\/+/, '');
-                                        app("queries", parsedPath, item.contents.toString());
-                                }));
+                              /*||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||
+                              //||  Use Promise.all to wait for all iterations to complete
+                              //||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||*/
+                              await Promise.all(structure.map(async (item) => {
+                                    if (!item.isFile) return;
+                                    const parsedPath = item.relative.replace(app("config", "queries").path, '').replace(/^\/+/, '');
+                                    if (item.contents !== null) {
+                                          app("queries", parsedPath, item.contents.toString());
+                                    } else {
+                                          app("queries", parsedPath, "");
+                                    }                                
+                              }));
                         };
                         await this.watcher.init();
                 } 

@@ -16,7 +16,6 @@
       import app                               from "../app.js"
       import Endpoints                         from "../modules/router.endpoints.js"
       import FileWatcher                       from "../base/filewatcher.js"
-      import Pages                             from "../modules/router.pages.js"
       import Chirp                             from "./chirp.js"
       
       import  { FileWatcherObject }            from "../base/.interfaces.js"
@@ -168,7 +167,7 @@
                   const myRoute = this.getRoute(chirp);
                   if (myRoute === undefined) {
                         console.log("UNDEFINED ROUTE : " + chirp.request.url);
-                        return chirp.respond(404,  app.lang.routeError("ERR404", chirp.request.lang)  + " : " + chirp.request.url, {contentType : 'text/html'});
+                        return chirp.respond(404,  "ERR404"  + " : " + chirp.request.url, {contentType : 'text/html'});
                   }
                   /*||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||
                   //|| Route by Type
@@ -180,7 +179,7 @@
                   //|| Caching
                   //||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||*/
                   app.log("Processing route: " + chirp.request.url, "info");         
-                  return chirp.respond(404,  app.lang.routeError("ERR404", chirp.request.lang)  + " : " + chirp.request.url, {contentType : 'text/html'});
+                  return chirp.respond(404,  "ERR404"  + " : " + chirp.request.url, { contentType : 'text/html' });
             }           
             
             /*||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||

@@ -12,8 +12,8 @@
       import { format }                   from 'date-fns';
       import { randomBytes }              from 'crypto';      
       import { fileTypeFromBuffer }       from 'file-type';
-      import JWT                          from "../../sonata/base/jwt.js";
-      import { JWTUpload }                from "../../.interfaces.jwt.js";
+      import JWT                          from "./jwt.js";
+      import { JWTUpload }                from "../.interfaces.jwt.js";
 
       /*||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||
       //|| Media Type
@@ -92,7 +92,7 @@
                   /*||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||
                   //|| Hash
                   //||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||*/
-                  if (id < 1 || id == null) {
+                  if (!id || id < 1 || id == null) {
                         path    = app("config", "media").dirMissing;                        
                         switch(type) { 
                               case "video"           : format = app("config", "media").missingV; break;
@@ -110,8 +110,8 @@
                   /*||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||
                   //|| Format the URL
                   //||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||*/
-                  format = format.replace("{{ID}}",   (id === null)   ? '' : id.toString());
-                  format = format.replace("{{SIZE}}", (size === null) ? 0  : size.toString());
+                  format = format.replace("{{ID}}",   (id === null)     ? '' : id.toString());
+                  format = format.replace("{{SIZE}}", (!size)           ? 0  : size.toString());
                   format = format.replace("{{HASH}}", hashId);
                   format = format.replace("{{EXT}}",  ext);
                   format = format.replace("{{INIT}}", init);

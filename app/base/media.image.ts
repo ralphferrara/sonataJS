@@ -16,8 +16,21 @@
       import Media                                    from "../base/media.js";
       import { MediaImageItem, ResizedImage }         from "./.interfaces.js";
       import sharp, { OverlayOptions }                from 'sharp';
-      import * as exifParser                          from 'exif-parser';
+      import ExifReader                               from 'exifreader';
       import { fileTypeFromBuffer }                   from 'file-type';     
+
+      /*||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||
+      //|| Meta
+      //||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||*/    
+
+      interface MetaTags {
+            [key: string]: string | number | undefined; // Allow indexing by strings
+      }
+         
+      interface ImageMeta {
+            tags?: MetaTags; // The `tags` property is optional
+            [key: string]: any; // Allow additional properties if needed
+      }
 
       /*||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||
       //|| Media
@@ -35,10 +48,10 @@
             public filename         : string;
             public ext              : string; 
             public mime             : string;    
-            public orientation      : "L" | "P" | "S";
+            public orientation      : "L" | "P" | "S" = "S";
             public width            : number = -1;
             public height           : number = -1;                        
-            public meta             : Record<string, string> = {};
+            public meta             : ImageMeta = {};
             public status           : "OK" | "PENDING" | "CORRUPT" | "TOOBIG" | "TOOSMALL" | "UNSUPPORTED";
             public sizes            : ResizedImage[];
 
@@ -46,7 +59,7 @@
             //|| Constructor 
             //||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||*/    
 
-            constructor(id, imageData: Buffer, filename: string) {
+            constructor(id : number, imageData: Buffer, filename: string) {
                   this.id                 = id;
                   this.buffer             = imageData;
                   this.originalBuffer     = imageData;
@@ -119,22 +132,19 @@
             //|| EXIF
             //||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||*/    
 
-            public async extractEXIF() : Promise<boolean> {
+            public async extractEXIF(): Promise<boolean> {
                   app.log("MediaImage :: extractEXIF()", "info");
-                  /*||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||
-                  //|| Get the EXIF Data
-                  //||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||*/    
                   try {
-                        const exif                = await exifParser.create(this.buffer).parse();
-                        this.meta                 = exif.tags;
+                        const exifData    = ExifReader.load(this.buffer);
+                        this.meta         = exifData;
+                        app.log("MediaImage :: extractEXIF()", "success");
+                        return true;
                   } catch (error) {
-                        app.log("Media :: init() :: Error parsing EXIF data");
+                        app.log("MediaImage :: extractEXIF() :: Error parsing EXIF data", "fail");
                         console.error(error);
                         this.status = "CORRUPT";
                         return false;
-                  }      
-                  app.log("MediaImage :: extractEXIF()", "success");           
-                  return true; 
+                  }
             }
 
             /*||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||
@@ -147,8 +157,8 @@
                   /*||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||
                   //|| Do we have Orientation EXIF data?
                   //||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||*/                      
-                  if (this.meta && this.meta['tags'] && this.meta['tags']['Orientation']) {
-                        const o                       = this.meta['tags']['Orientation'];
+                  if (this.meta?.tags?.['Orientation'] !== undefined) {
+                        const o                       = this.meta.tags['Orientation'] as number;
                         const correctOrientation      =  o === 1 || o === 3 || o === 8 || o === 6 ? "L" : o === 2 || o === 4 || o === 5 || o === 7 ? "P" : "S";
                         rotate90                      = correctOrientation === "P";
                   }                        
@@ -441,7 +451,7 @@
                         //|| Get the Watermark Metadata
                         //||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||*/    
                         const watermarkMetadata = await sharp(watermark).metadata();
-                        const watermarkHeight   = watermarkMetadata.height;
+                        const watermarkHeight   = watermarkMetadata.height || 0;
                         /*||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||
                         //|| Add the Watermark to the Image
                         //||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||*/    

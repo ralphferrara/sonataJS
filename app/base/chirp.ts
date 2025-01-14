@@ -14,6 +14,7 @@
       //||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||*/
 
       import { ChirpStatusCodes, ChirpOptions } from './.interfaces.js';
+      import { JWTLogin }                       from '../.interfaces.jwt.js';
 
       /*||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||
       //|| Chirp
@@ -24,6 +25,7 @@
       import ChirpUser                          from './chirp.user.js';
       import JWT                                from './jwt.js';
       import TTL                                from './ttl.js';
+      import Users                              from '../base/users.js';
       import { CookieOptions }                  from './.interfaces.js';
       import { Route }                          from './.interfaces.js';
 
@@ -43,7 +45,7 @@
             public site         : string;
             public errors       : Array<string> = [];
             public responded    : boolean;
-            public jwtFields    : {};
+            public jwtFields    :  { [key: string]: string };
             private steps       : Array<Function> = [];
             private currentStep : number;
             private dataset     : Record<string, string> = {};
@@ -172,7 +174,7 @@
             error(status: ChirpStatusCodes, errorCode:string, mayContinue?:boolean, options?:ChirpOptions) : any {
                   this.errors.push(errorCode);
                   app.log("Chirp : error() : " + errorCode, 'error');
-                  var errorMessage = app.lang.routeError(errorCode, this.request.lang);
+                  var errorMessage = errorCode;
                   if (mayContinue !== false) return this.respond(status, {'error' : {
                         'code'    : errorCode,
                         'message' : errorMessage

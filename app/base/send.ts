@@ -26,7 +26,7 @@
             //|| Email
             //||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||*/
 
-            static async email(to : string, subject : string, html : string, text? : string, options? : EmailOptions, site? : string, processorName? : string): Promise<boolean> {
+            static async email(to : string, subject : string, html : string, text? : string, options : EmailOptions = {}, site : string = "default", processorName : string = "default"): Promise<boolean> {
                   app.log('Send : email()', 'info');  
                   const seqi : SMSEmailQueueItem = {
                         type            : "email",
@@ -46,7 +46,7 @@
             //|| SMS
             //||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||*/
 
-            static async sms(to: string, text? : string, site?: string, processorName? : string): Promise<boolean> {
+            static async sms(to: string, text : string, site: string, processorName : string): Promise<boolean> {
                   app.log('Send : email()', 'info');  
                   const seqi : SMSEmailQueueItem = {
                         type            : "sms",
@@ -55,7 +55,7 @@
                         attempts        : [],
                         status          : "PENDING"
                   }
-                  const queueItem =  await Queue.send("sendSMS", '', "string", seqi, site, processorName);
+                  const queueItem =  await Queue.send("sendSMS", '', "string", seqi, site || "default", processorName);
                   return (queueItem !== null);
             }          
                         
@@ -131,7 +131,7 @@
 
             static popSender(type : "sms" | "email", attempts : SendQueueAttempt[], site : string): string | null {
                   app.log('Send : popSender()', 'info');
-                  const siteSenders  = app("sites", site).senders[type];
+                  const siteSenders  = app("config", "senders").type;
                   const attempted    = attempts.map(attempt => attempt.sender);
                   for (const siteSender of siteSenders) {
                         if (!attempted.includes(siteSender) && app("senders", type)[siteSender] !== undefined) {

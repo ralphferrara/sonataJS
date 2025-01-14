@@ -42,16 +42,16 @@
             public buffer           : Buffer;
             public filename         : string;
             public ext              : string; 
-            public width            : number;
-            public height           : number; 
+            public width            : number = 0;
+            public height           : number = 0; 
             public duration         : number;  
-            public orientation      : "L" | "P" | "S";      
+            public orientation      : "L" | "P" | "S" = "S";
             public meta             : MediaVideoMeta;
-            public status           : "OK" | "PENDING" | "CORRUPT" | "TOOBIG" | "TOOSMALL" | "UNSUPPORTED";
+            public status           : "OK" | "PENDING" | "CORRUPT" | "TOOBIG" | "TOOSMALL" | "UNSUPPORTED" = "PENDING";
             public sizes            : ResizedVideo[];
             public tmpOriginal      : string;
-            public tmpWatermark     : string;
-            public watermarkBuffer  : Buffer;
+            public tmpWatermark     : string | null;
+            public watermarkBuffer  : Buffer | null;
 
             /*||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||    
             //|| Constructor 
@@ -181,14 +181,14 @@
                               //|| Save Meta Data
                               //||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||*/          
                               this.meta = {
-                                    bitrate     : metadata.format.bit_rate?.toString() || 'N/A',
-                                    format      : metadata.format.format_name,
-                                    duration    : metadata.format.duration ? Math.floor(Number(metadata.format.duration)) : 0,
-                                    size        : this.buffer.length,
-                                    width       : videoStream.width,
-                                    height      : videoStream.height,
-                                    orientation : videoStream.width > videoStream.height ? "L" : (videoStream.width < videoStream.height ? "P" : "S")
-                              };
+                                    bitrate           : metadata.format.bit_rate?.toString() || 'N/A',
+                                    format            : metadata.format.format_name || 'unknown',
+                                    duration          : metadata.format.duration ? Math.floor(Number(metadata.format.duration)) : 0,
+                                    size              : this.buffer.length,
+                                    width             : videoStream.width ?? 0, // Default to 0 if undefined
+                                    height            : videoStream.height ?? 0, // Default to 0 if undefined
+                                    orientation       : (videoStream.width ?? 0) > (videoStream.height ?? 0) ? "L" : (videoStream.width ?? 0) < (videoStream.height ?? 0) ? "P" : "S"
+                                 };
                               /*||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||    
                               //|| Done
                               //||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||*/          
@@ -250,14 +250,15 @@
                                           /*||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||    
                                           //|| Add the Watermark
                                           //||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||*/    
-                                          if (this.tmpWatermark !== null) {
-                                                try {                                                      
-                                                      screenshotImg  = await MediaImage.addWatermark(screenshotImg, this.watermarkBuffer, screenshotWidth, screenshotHeight);
-                                                      app.log("Added watermark to screenshot", "success");
-                                                } catch (error) {
-                                                      app.log("Error adding watermark to image:", "fail");
-                                                }
-                                          }
+                                          if (this.watermarkBuffer !== null) {
+                                                screenshotImg = await MediaImage.addWatermark(
+                                                   screenshotImg,
+                                                   this.watermarkBuffer, // Guaranteed to be non-null
+                                                   screenshotWidth || 1024,
+                                                   screenshotHeight || 768
+                                                );
+                                                app.log("Added watermark to screenshot", "success");
+                                             }
                                           /*||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||    
                                           //|| Add to Sizes Array
                                           //||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||*/    

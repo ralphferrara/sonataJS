@@ -43,7 +43,7 @@
             //|| Parse Request
             //||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||*/
             
-            public async parseRequest(request: any, response: any): Promise<RequestData> {
+            public async parseRequest(request: any, response: any): Promise<RequestData | undefined> {
                   const ip = request.headers['x-forwarded-for'] || request.socket.remoteAddress;
                   console.log(request.url);
                   if (request.url === '//') return undefined;
@@ -53,7 +53,7 @@
                   //||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||*/
                   const params: Record<string, string> = {};
                   Object.entries(urlDetails.query).forEach(([key, value]) => {
-                        params[key] = Array.isArray(value) ? value.join(', ') : value;
+                        params[key] = Array.isArray(value) ? value.join(', ') : (value ?? '');
                   });
                   /*||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||
                   //|| Parse the URL and extract the pathname
@@ -88,7 +88,7 @@
                                     if (size > this.maximumFileSize) {
                                           if (!response.headersSent) {
                                                 response.writeHead(413, { 'Content-Type': 'text/plain' });
-                                                response.end(app.lang.routeError("CHP002", "en"));
+                                                response.end("CHP002");
                                           }
                                           result.status = "FAILED";
                                           result.error  = "File too large";
@@ -118,8 +118,8 @@
                   } else if (request.headers['content-type']?.includes('application/json')) {
                         return new Promise(resolve => {
                               let bodyData = '';
-                              request.on('data', chunk => {
-                                    bodyData += chunk;
+                              request.on('data', (chunk: Buffer) => {
+                                    bodyData += chunk.toString(); // Convert Buffer to string
                               });
                               request.on('end', () => {
                                     try {
@@ -137,14 +137,14 @@
                   } else {
                         return new Promise(resolve => {
                               let bodyData = '';
-                              request.on('data', chunk => {
-                                    bodyData += chunk;
+                              request.on('data', (chunk: Buffer) => {
+                                    bodyData += chunk.toString(); // Convert Buffer to string
                               });
                               request.on('end', () => {
                                     const parsedBody = parseQueryString(bodyData);
                                     Object.keys(parsedBody).forEach(key => {
                                           const value = parsedBody[key];
-                                          result.post[key] = Array.isArray(value) ? value.join(', ') : value;
+                                          result.post[key] = Array.isArray(value) ? value.join(', ') : (value ?? '');
                                     });
                                     result.status = "PARSED";
                                     resolve(result);
@@ -162,7 +162,7 @@
                   const headersBuffer = partBuffer.slice(0, headersEndIndex);
                   let bodyBuffer = this.trimBufferEnd(partBuffer.slice(headersEndIndex + 4));
                   
-                  const headers = headersBuffer.toString().split('\r\n').reduce((acc, headerLine) => {
+                  const headers : { [key: string]: string } = headersBuffer.toString().split('\r\n').reduce((acc : {[key: string]: string} , headerLine) => {
                         const separatorIndex = headerLine.indexOf(':');
                         if (separatorIndex !== -1) {
                               const key = headerLine.substring(0, separatorIndex).trim();

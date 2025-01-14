@@ -65,7 +65,7 @@
                         //||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||*/
                         const url       = `redis://${this.config.host}:${this.config.port}`;
                         this.client     = redis.createClient({ url });
-                        this.client.on('error', (err) => {
+                        this.client.on('error', (err: Error) => {
                               app.log('Redis Client Error', 'error');
                               console.error(err);
                         });

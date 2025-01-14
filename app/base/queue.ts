@@ -99,11 +99,10 @@
                   /*||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||
                   //|| Set Processor
                   //||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||*/
-                  const myProcessor : QueueProcessor = {
-                        before        : preProcessor,
-                        afterSuccess  : afterSuccess,
-                        afterError    : afterError
-                  };                  
+                  const myProcessor : QueueProcessor              = {};                  
+                  if (preProcessor) myProcessor.before            = preProcessor;
+                  if (afterSuccess) myProcessor.afterSuccess      = afterSuccess;
+                  if (afterError) myProcessor.afterError          = afterError;
                   if(myQueue.processor === undefined) myQueue.processor = {};
                   myQueue.processor[processorName] = myProcessor;
                   /*||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||
@@ -204,6 +203,7 @@
                   app.log('Queue : consume() : Get Queue Name', 'info');                  
                   const myQueue         = app("queues", queueItem.queue);
                   if (myQueue === undefined)         app.log("Queue.consume : Queue was not defined : " + data, "info");
+                  if (queueItem.processorName === undefined)    return app.log("Queue.consume : Processor Name was not defined : " + data, "info");
                   const myProcessor     = myQueue.processor[queueItem.processorName] as QueueProcessor;
                   if (myProcessor === undefined)     app.log("Queue.consume : Processor ["+queueItem.processorName+"] was not defined : " + data, "info");
                   if (typeof(myProcessor.before) === "function") await myProcessor.before(queueItem);

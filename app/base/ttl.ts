@@ -6,6 +6,15 @@
       import  app                               from '../app.js';
 
       /*||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||
+      //|| Interface
+      //||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||*/
+
+      export interface TTLStep {
+            timestamp : Date;
+            ttl       : number;
+      }
+
+      /*||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||
       //|| Util Class
       //||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||*/
 
@@ -15,11 +24,11 @@
             //|| Var
             //||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||*/
 
-            public started;
-            public steps = {};
-            public completed;
-            public ttl;
-            public name;
+            public started    : Date;
+            private steps     : Record<string, TTLStep> = {};
+            public completed  : Date | null;
+            public ttl        : number;
+            public name       : string;
 
             /*||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||
             //|| Check if Email Exists in Database
@@ -61,7 +70,7 @@
                   this.ttl = this.elapsed();
                   app.log(`TTL[${this.name}] : START ---`, 'ttl');
                   for (const desc in this.steps) {
-                        app.log(`TTL[${this.name}] : ${desc} (${this.steps[desc].ttl}ms)`, 'ttl');
+                     app.log(`TTL[${this.name}] : ${desc} (${this.steps[desc].ttl}ms)`, 'ttl');
                   }
                   app.log(`TTL[${this.name}] : COMPLETED (${this.elapsed()}ms)`, 'ttl');
             }

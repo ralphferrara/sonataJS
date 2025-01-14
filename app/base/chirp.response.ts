@@ -7,7 +7,6 @@
       //|| Fastify
       //||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||*/
 
-      import { FastifyReply }                   from 'fastify';
       import http                               from 'http';
       
       /*||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||
@@ -27,8 +26,8 @@
             //|| Var
             //||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||*/
 
-            public use          : "fastify" | "native" = "native";
-            public object       : FastifyReply | http.ServerResponse | undefined;  
+            public use          : "native" = "native";
+            public object       : http.ServerResponse | null = null;
             public cookiesSet   : Cookie[] = [];          
 
             /*||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||
@@ -36,15 +35,6 @@
             //||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||*/
 
             async native(response: http.ServerResponse) {
-                  this.use    = "native";
-                  this.object = response;                  
-            }
-
-            /*||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||
-            //|| Process Fastify
-            //||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||*/
-
-            async fastify(response: FastifyReply) {
                   this.use    = "native";
                   this.object = response;                  
             }
@@ -76,23 +66,20 @@
             //||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||*/
 
             respond(status: number, body: any, contentType : string, options : ChirpOptions | undefined) {
-                  if (this.use === 'native')    return this.respondNative(status,  body, contentType, options);
-                  if (this.use === 'fastify')   return this.respondFastify(status, body, contentType, options);
-                  return false;
+                  return this.respondNative(status,  body, contentType, options);
             }
 
             /*||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||
             //|| Native
             //||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||*/
 
-            respondNative(status: number, body: any, contentType: string, options: any) {
+            respondNative(status: number, body: any, contentType: string, options: ChirpOptions | undefined) {
                   var native = this.object as http.ServerResponse;
                   native.setHeader('Content-Type', contentType);
-                  if (options && options.headers) {
-                        Object.keys(options.headers).forEach(key => {
-                        native.setHeader(key, options.headers[key]);
+                  const headers = options?.headers ?? {}; // Default to an empty object
+                  Object.keys(headers).forEach(key => {
+                        native.setHeader(key, headers[key]);
                   });
-                  }
                   if (this.cookiesSet) {
                         const cookies = this.cookiesSet.map(cookie => {
                               let cookieOptions = "";
@@ -115,24 +102,6 @@
                         native.end(body);
                   }
                   return true;
-            }
-
-            /*||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||
-            //|| Fastify
-            //||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||*/
-
-            respondFastify(status: number, body: any, contentType : string, options: any) {
-                  var fastify = this.object as FastifyReply;
-                  fastify.type = options.contentType;
-                  if (this.cookiesSet) this.cookiesSet.forEach(cookie => {
-                        fastify.setCookie(cookie.name, cookie.value, cookie.options);
-                  });                  
-                  if (status === 301 || status === 302) {
-                        fastify.redirect(status, body);
-                  } else {
-                        fastify.status(status).send(body);
-                  }
-                  return true;            
             }
 
             /*||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||

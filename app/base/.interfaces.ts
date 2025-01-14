@@ -136,7 +136,7 @@
       export interface ChirpOptions {
             contentType : string;
             isCached?   : boolean;
-            headers?    : {};
+            headers?    : { [key: string]: string };
       }
 
       /*||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||
@@ -342,7 +342,7 @@
             limit        : number | null;
             offset       : number | null;        
             page         : number | null;             
-            types        : {};                   
+            types        : { [key: string]: any };
       }
 
       /*||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||

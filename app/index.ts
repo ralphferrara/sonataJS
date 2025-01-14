@@ -8,16 +8,22 @@
       //||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||*/
 
       import os                                       from "os";
+      import fs                                       from "fs/promises";
       import app                                      from "./app.js"; 
       import yargs                                    from 'yargs';
+      import { hideBin }                              from 'yargs/helpers';
 
       /*||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||
       //|| Check if In Docker
       //||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||*/
 
-      const argv           = yargs(process.argv.slice(2)).argv;
-      const inProduction   = (!argv["dev"] || argv["dev"] !== true);
-      const isBuild        = (argv["build"] && argv["build"] === true && !inProduction);
+      const argv = await yargs(hideBin(process.argv))
+            .option('dev', { type: 'boolean', default: false })
+            .option('build', { type: 'boolean', default: false })
+            .parse();
+
+      const inProduction = (!argv.dev || argv.dev !== true);
+      const isBuild = (argv.build === true && !inProduction);;
 
       /*||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||
       //|| Check if In Docker

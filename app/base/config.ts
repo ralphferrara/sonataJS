@@ -10,7 +10,7 @@
       import Global                                   from "./global.js";
       import Path                                     from "./path.js";
       import Log                                      from "./log.js";
-      import FileWatcher                              from "./file.watcher.js";
+      import FileWatcher                              from "./filewatcher.js";
 
       /*||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||
       //|| FWO
@@ -34,7 +34,7 @@
             //|| Var
             //||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||*/
 
-            public configDir : string = new Path("/config").resolve();
+            public configDir : string = new Path("/config").abs();
             public watcher   : any | null = null;
             public exported  : object = {};
             

@@ -61,8 +61,8 @@
             // Check for invalid usernames
             if (value === null || value === undefined || value.length < 4) return "VUN000";
             if (!usernameRegex.test(value)) return "VUN001";
-            if (moderateWords.some(word => value.includes(word))) return "VUN004";
-            if (bannedWords.some(word => value.includes(word))) return "VUN005";
+            if (moderateWords && moderateWords.some(word => value.includes(word))) return "VUN004";
+            if (bannedWords && bannedWords.some(word => value.includes(word))) return "VUN005";
             
             // If all checks pass, return true
             return true;

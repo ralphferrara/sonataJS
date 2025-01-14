@@ -40,7 +40,7 @@
                   try { 
                         this.client = twilio(config.account, config.privateKey);
                         this.config = config;
-                        this.client.api.accounts(config.account).fetch();
+                        this.client.api.accounts(config.account || "" ).fetch();
                   } catch (error) {
                         console.error(error);
                         app.log('Could not initiate Twilio Client', 'break');

@@ -110,8 +110,8 @@
                   this.payload.page   = (this.payload.page === null || this.payload.page <= 1) ? 1 : this.payload.page;
                   this.payload.page   = (this.payload.page <= 1)        ? 1 : this.payload.page;
                   this.payload.limit  = (this.payload.limit === null)   ? perPage : this.payload.limit;
-                  this.payload.limit  = (this.payload.limit >= maxPage) ? perPage : this.payload.limit;
-                  this.payload.offset = (this.payload.page  - 1) * this.payload.limit;
+                  this.payload.limit  = (this.payload.limit && this.payload.limit >= maxPage) ? perPage : this.payload.limit;
+                  this.payload.offset = (this.payload.page  - 1) * (this.payload.limit || 0);
                   this.payload.offset = (this.payload.offset < 0)       ? 0 : this.payload.offset;
                   /*||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||
                   //|| Compile Query

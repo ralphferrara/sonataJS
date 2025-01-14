@@ -98,9 +98,9 @@
             //|| Consume
             //||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||*/
 
-            public async consumeMessages(channel, queueName) {
+            public async consumeMessages(channel : string, queueName : string) {
                   app.log("Setting up message consumpation from queue '" + queueName + "'.", "info");
-                  await this.channel.consume(queueName, async (message) => {
+                  await this.channel.consume(queueName, async (message : any) => {
                   let msgContent = "";
                   if (message !== null) {
                         try { 
