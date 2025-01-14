@@ -1,0 +1,47 @@
+{
+	"name": "sonata.ts",
+	"version": "0.0.5",
+	"main": "build/index.js",
+	"types": "build/index.d.ts",
+	"scripts": {
+		"build": "tsc",
+		"dev": "tsx app/index.ts",
+		"start": "node dist/index.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/ralphferrara/sonataJS.git"
+	},
+	"author": "",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/ralphferrara/sonataJS/issues"
+	},
+	"homepage": "https://github.com/ralphferrara/sonataJS#readme",
+	"description": "",
+	"devDependencies": {
+		"@types/node": "^22.10.6",
+		"bcrypt": "^5.1.1",
+		"chokidar": "^4.0.3",
+		"cookie": "^1.0.2",
+		"ts-node": "^10.9.2",
+		"typescript": "^5.7.3",
+		"ws": "^8.18.0"
+	},
+	"dependencies": {
+		"@aws-sdk/client-ses": "^3.726.1",
+		"@aws-sdk/client-sns": "^3.726.1",
+		"@google-cloud/storage": "^7.15.0",
+		"@sendgrid/mail": "^8.1.4",
+		"amqplib": "^0.10.5",
+		"mongodb": "^6.12.0",
+		"mysql2": "^3.12.0",
+		"os": "^0.1.2",
+		"redis": "^4.7.0",
+		"reflect-metadata": "^0.2.2",
+		"sharp": "^0.33.5",
+		"terser": "^5.37.0",
+		"twilio": "^5.4.2",
+		"yargs": "^17.7.2"
+	}
+}
