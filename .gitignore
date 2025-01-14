@@ -3,3 +3,4 @@ node_modules/
 .databases/
 config/
 docker-compose.yml
+update.npm.ps1

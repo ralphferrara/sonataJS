@@ -11,6 +11,6 @@
          "skipLibCheck": true,                 // Skips type checking of declaration files for faster builds.
          "forceConsistentCasingInFileNames": true // Enforces case sensitivity in file names.
       },
-      "include": ["app"]                        // Specifies the source files to compile.
+      "include": ["app", "app/.interfaces.jwt.ts"]                        // Specifies the source files to compile.
    }
    
