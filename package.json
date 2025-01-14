@@ -1,15 +1,15 @@
 {
 	"name": "sonata.ts",
-	"version": "0.1.5",
+	"version": "0.2.0",
 	"main": "build/index.js",
-      "module": "dist/index.mjs",
+	"module": "dist/index.mjs",
 	"types": "build/index.d.ts",
-      "exports": {
-            ".": {
-               "require": "./dist/index.js",
-               "import": "./dist/index.mjs"
-            }
-      },
+	"exports": {
+		".": {
+			"require": "./dist/index.js",
+			"import": "./dist/index.mjs"
+		}
+	},
 	"scripts": {
 		"build": "tsc",
 		"dev": "tsx app/index.ts",
