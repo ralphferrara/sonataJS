@@ -1,0 +1,23 @@
+CREATE TABLE `contacts` (
+  `id_contact` int(11) NOT NULL AUTO_INCREMENT,
+  `fid_entity` int(11) DEFAULT NULL,
+  `contact_address` varchar(128) DEFAULT NULL,
+  `contact_address_secondary` varchar(128) DEFAULT NULL,
+  `contact_city` varchar(128) DEFAULT NULL,
+  `contact_state` varchar(128) DEFAULT NULL,
+  `contact_postal` varchar(10) DEFAULT NULL,
+  `contact_country` varchar(3) DEFAULT NULL,
+  `contact_phone` varchar(15) DEFAULT NULL,
+  `contact_email` varchar(128) DEFAULT NULL,
+  `contact_website` varchar(128) DEFAULT NULL,
+  `contact_latitude` decimal(10,8) DEFAULT NULL,
+  `contact_longitude` decimal(10,8) DEFAULT NULL,
+  `contact_directions` text DEFAULT NULL,
+  PRIMARY KEY (`id_contact`),
+  KEY `fid_entity` (`fid_entity`),
+  KEY `contact_city` (`contact_city`),
+  KEY `contact_state` (`contact_state`),
+  KEY `contact_latitude` (`contact_latitude`),
+  KEY `contact_longitude` (`contact_longitude`),
+  CONSTRAINT `fk_entities_fid_entity` FOREIGN KEY (`fid_entity`) REFERENCES `entities` (`id_entity`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

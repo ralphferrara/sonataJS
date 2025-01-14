@@ -1,0 +1,20 @@
+CREATE TABLE `reactions` (
+  `id_like` int(11) NOT NULL AUTO_INCREMENT,
+  `fid_user` int(11) NOT NULL,
+  `fid_recipient` int(11) DEFAULT -1,
+  `fid_area` int(11) DEFAULT NULL,
+  `reaction_area` varchar(4) NOT NULL,
+  `reaction_read` tinyint(4) NOT NULL DEFAULT 0,
+  `reaction_timestamp` timestamp NOT NULL DEFAULT current_timestamp(),
+  `reaction_reaction` varchar(4) DEFAULT NULL,
+  `reaction_altered` datetime DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id_like`),
+  KEY `fid_user` (`fid_user`),
+  KEY `fid_recipient` (`fid_recipient`),
+  KEY `fid_area` (`fid_area`),
+  KEY `.reaction_area` (`reaction_area`),
+  KEY `fid_area_reaction_area` (`fid_area`,`reaction_area`),
+  KEY `reaction_read` (`reaction_read`),
+  KEY `reaction_timestamp` (`reaction_timestamp`),
+  KEY `reaction_altered` (`reaction_altered`)
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

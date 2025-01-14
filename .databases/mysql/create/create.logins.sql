@@ -1,0 +1,20 @@
+CREATE TABLE `logins` (
+  `id_login` int(11) NOT NULL AUTO_INCREMENT,
+  `fid_user` int(11) DEFAULT NULL,
+  `login_phone` varchar(64) DEFAULT NULL,
+  `login_email` varchar(64) DEFAULT NULL,
+  `login_social` varchar(128) DEFAULT NULL,
+  `login_status` char(2) DEFAULT NULL,
+  `login_verified_phone` tinyint(4) DEFAULT 0,
+  `login_verified_email` tinyint(4) DEFAULT 0,
+  `login_password` varchar(180) DEFAULT NULL,
+  PRIMARY KEY (`id_login`),
+  UNIQUE KEY `id_login_UNIQUE` (`id_login`),
+  UNIQUE KEY `fid_user_UNIQUE` (`fid_user`),
+  UNIQUE KEY `login_phone_UNIQUE` (`login_phone`),
+  UNIQUE KEY `login_email_UNIQUE` (`login_email`),
+  UNIQUE KEY `login_social_UNIQUE` (`login_social`),
+  KEY `login_status` (`login_status`),
+  KEY `login_verified_phone` (`login_verified_phone`),
+  KEY `login_verified_email` (`login_verified_email`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

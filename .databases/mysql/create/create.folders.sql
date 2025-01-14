@@ -1,0 +1,23 @@
+CREATE TABLE `folders` (
+  `id_folder` int(11) NOT NULL AUTO_INCREMENT,
+  `fid_user` int(11) DEFAULT NULL,
+  `fid_media_cover` int(11) DEFAULT NULL,
+  `folder_status` varchar(4) DEFAULT 'PA',
+  `folder_type` varchar(4) DEFAULT NULL,
+  `folder_title` varchar(64) DEFAULT NULL,
+  `folder_description` varchar(256) DEFAULT NULL,
+  `folder_permissions` varchar(4) DEFAULT NULL,
+  `folder_created` timestamp NULL DEFAULT current_timestamp(),
+  `folder_updated` datetime DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id_folder`),
+  UNIQUE KEY `id_folder_UNIQUE` (`id_folder`),
+  KEY `fid_user` (`fid_user`),
+  KEY `fid_media_cover` (`fid_media_cover`),
+  KEY `folder_status` (`folder_status`),
+  KEY `folder_type` (`folder_type`),
+  KEY `folder_permissions` (`folder_permissions`),
+  KEY `folder_created` (`folder_created`),
+  KEY `folder_updated` (`folder_updated`),
+  FULLTEXT KEY `folder_title` (`folder_title`),
+  FULLTEXT KEY `folder_description` (`folder_description`)
+);

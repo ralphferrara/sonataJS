@@ -1,0 +1,20 @@
+CREATE TABLE `comments` (
+  `id_comment` int(11) NOT NULL AUTO_INCREMENT,
+  `fid_comment` int(11) DEFAULT NULL,
+  `fid_user` int(11) DEFAULT NULL,
+  `fid_recipient` int(11) DEFAULT NULL,
+  `fid_area` int(11) DEFAULT NULL,
+  `comment_area` varchar(3) NOT NULL,
+  `comment_comment` varchar(512) NOT NULL,
+  `comment_datetime` timestamp NOT NULL DEFAULT current_timestamp(),
+  `comment_read` tinyint(4) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id_comment`),
+  KEY `fid_comment` (`fid_comment`),
+  KEY `fid_user` (`fid_user`),
+  KEY `fid_recipient` (`fid_recipient`),
+  KEY `fid_area` (`fid_area`),
+  KEY `comment_area` (`comment_area`),
+  KEY `comment_datetime` (`comment_datetime`),
+  KEY `comment_read` (`comment_read`),
+  KEY `idx_comments_fid_comment_area` (`fid_area`,`comment_area`)
+);

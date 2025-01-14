@@ -1,0 +1,23 @@
+CREATE TABLE `partners` (
+      `id_partner` int(11) NOT NULL AUTO_INCREMENT,
+      `fid_user` int(11) DEFAULT NULL,
+      `fid_verification` int(11) DEFAULT NULL,
+      `partner_gender` varchar(4) DEFAULT NULL,
+      `partner_dob` date DEFAULT NULL,
+      `partner_city` varchar(64) DEFAULT NULL,
+      `partner_state` varchar(64) DEFAULT NULL,
+      `partner_postal` varchar(64) DEFAULT NULL,
+      `partner_latitude` decimal(10,8) DEFAULT NULL,
+      `partner_longitude` decimal(10,8) DEFAULT NULL,
+      `partner_verified` datetime DEFAULT '0000-00-00 00:00:00',
+      PRIMARY KEY (`id_partner`),
+      KEY `fid_user` (`fid_user`),
+      KEY `fid_verification` (`fid_verification`),
+      KEY `partner_gender` (`partner_gender`),
+      KEY `partner_dob` (`partner_dob`),
+      KEY `partner_city` (`partner_city`), 
+      KEY `partner_state` (`partner_state`),
+      KEY `partner_postal` (`partner_postal`),
+      KEY `partner_latitude` (`partner_latitude`),
+      KEY `partner_longitude` (`partner_longitude`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
