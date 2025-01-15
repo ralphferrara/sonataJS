@@ -1,10 +1,10 @@
 {
 	"name": "sonata.ts",
-	"version": "0.3.8",
+	"version": "0.3.9",
 	"main": "build/index.js",
 	"module": "build/index.mjs",
 	"types": "build/index.d.ts",
-      "type" : "module",
+	"type": "module",
 	"exports": {
 		".": {
 			"require": "./build/index.js",
