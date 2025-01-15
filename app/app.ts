@@ -5,10 +5,13 @@
 
       /*||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||
       //|| Dependencies
-      //||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||*/      
+      //||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||*/
 
-      import cluster                            from 'cluster';
-      import os                                 from 'os';
+      import os                                       from "os";
+      import fs                                       from "fs/promises";
+      import yargs                                    from 'yargs';
+      import { hideBin }                              from 'yargs/helpers';
+      import cluster                                  from 'cluster';
 
       /*||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||
       //|| Interfaces
@@ -103,15 +106,25 @@
       //|| Initialize
       //||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||*/
 
-      app.init   = async(configDir:string, isProduction:boolean, isBuild : boolean, useCluster:boolean, inDocker:boolean, callback:Function) => {            
+      app.init   = async(configDir:string, useCluster : boolean, callback:Function) => {            
             console.log("Starting...");
+            const argv = await yargs(hideBin(process.argv))
+                  .option('dev', { type: 'boolean', default: false })
+                  .option('build', { type: 'boolean', default: false })
+                  .parse();
+            const inProduction = (!argv.dev || argv.dev !== true);
+            const isBuild = (argv.build === true && !inProduction);;            
             /*||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||
             //|| Production Mode
             //||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||*/
-            app.isProduction = isProduction;
-            app.useCluster   = useCluster;
-            app.inDocker     = inDocker;
-            app.isBuild      = isBuild;
+            app.isProduction = inProduction;
+            app.isBuild      = isBuild;            
+            try {
+                  const cgroup = await fs.readFile('/proc/1/cgroup', 'utf8');
+                  app.inDocker = cgroup.includes('/docker/');
+            } catch (err) {
+                  app.inDocker = false;
+            };
             /*||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||
             //|| CPU Counter
             //||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||*/
@@ -119,7 +132,7 @@
             /*||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||
             //|| Cluster
             //||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||*/
-            if (cluster.isPrimary && numCPUs > 1 && app.isProduction && app.useCluster) { 
+            if (cluster.isPrimary && numCPUs > 1 && app.isProduction && useCluster) { 
                   for (let i = 0; i < (numCPUs - 4); i++) {
                         app.log("Forking Worker: " + i, "success");
                         cluster.fork();
