@@ -12,7 +12,7 @@
 	},
 	"scripts": {
 		"build": "tsc",
-		"dev": "tsx app/index.ts",
+		"dev": "tsx app/index.run.ts",
 		"start": "node build/index.js"
 	},
 	"repository": {

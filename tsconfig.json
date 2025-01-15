@@ -3,6 +3,7 @@
          "target": "ES2022",                     // Ensures support for top-level await and modern features.
          "module": "ESNext",                    // Enables the use of ES modules, required for top-level await.
          "moduleResolution": "node",           // Ensures compatibility with Node.js module resolution.
+         "experimentalDecorators" : true,
          "outDir": "build/",                   // Output directory for compiled files.
          "rootDir": "app",                     // Specifies the root directory of source files.
          "strict": true,                       // Enables all strict type-checking options.

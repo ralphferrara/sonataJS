@@ -36,7 +36,6 @@
             public params       : Record<string, string> = {};
             public post         : Record<string, string> = {};
             public protocol     : "http" | "https" = "http";
-            public lang         : string = 'en';
             public url          : string = '';
             public site         : string = 'default';
 
@@ -66,20 +65,11 @@
                   this.ip           = parsedRequest.ip;
                   this.headers      = parsedRequest.headers;
                   this.files        = parsedRequest.files;
-                  this.lang         = app("config", "languages").root;
                   this.hostname     = request.headers.host;
                   this.protocol     = (request.url?.startsWith('https://')) ? 'https' : 'http';
                   this.params       = parsedRequest.params;
                   this.post         = parsedRequest.post;
                   this.site         = await this.parseSite(request.headers.host || "");
-                  /*||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||
-                  //|| Language
-                  //||=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-||*/                  
-                  const availableLang = app("config", "languages").available;
-                  if (request.headers['accept-language']) {
-                        const preferredLanguage = request.headers['accept-language'].split(',').map(lang => lang.split(';')[0]).find(lang => availableLang.includes(lang));
-                        this.lang =  preferredLanguage || this.lang;
-                  }
             }
 
 
