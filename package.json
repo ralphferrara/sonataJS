@@ -5,12 +5,12 @@
 	"module": "build/index.mjs",
 	"types": "build/index.d.ts",
 	"type": "module",
-	"exports": {
-		".": {
-			"require": "./build/index.js",
-			"import": "./build/index.mjs"
-		}
-	},
+      "exports": {
+            ".": {
+              "require": "./build/index.cjs",
+              "import": "./build/index.mjs"
+            }
+      },
 	"scripts": {
 		"build": "tsc",
 		"dev": "tsx app/index.run.ts",
