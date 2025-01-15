@@ -1,6 +1,6 @@
 {
 	"name": "sonata.ts",
-	"version": "0.3.6",
+	"version": "0.3.7",
 	"main": "build/index.js",
 	"module": "build/index.mjs",
 	"types": "build/index.d.ts",
